@@ -21,8 +21,10 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd ~/test-express
             git pull origin main
             npm install
             npm run build
-            pm2 restart test-express
+            pm2 restart test-express || pm2 start dist/index.js --name test-express
